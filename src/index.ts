@@ -1,6 +1,6 @@
-const electron = require( "@electron/remote" );
-const fs = require( "node:fs" );
-const NBT = require( "prismarine-nbt" );
+import electron = require("@electron/remote");
+import fs = require("node:fs");
+import NBT = require("prismarine-nbt");
 window.router.history.go( "/main_screen" );
 
 const RPC = new (require("discord-rpc")).Client({ transport: "ipc" });

@@ -51,11 +51,11 @@ window.router.routes.push({
                                     style: "hero",
                                     onClick: () => {
                                         window.sound.play( "ui.release" );
-                                        const commandInput = document.getElementById( "commandInput" );
+                                        const commandInput = document.getElementById( "commandInput" ) as HTMLInputElement;
                                         const data = validateCommand( commandInput.value );
 
-                                        document.getElementById( "commandElement" ).style.display = "block";
-                                        const commandOutput = document.getElementById( "commandOutput" );
+                                        document.getElementById( "commandElement" )!.style.display = "block";
+                                        const commandOutput = document.getElementById( "commandOutput" )!;
 
                                         commandOutput.style.color = data?.error ? "#ff6767" : "#79e752";
                                         commandOutput.innerText = data?.error ? data.data.message : "No errors.";
@@ -70,7 +70,7 @@ window.router.routes.push({
     },
 });
 
-const validateCommand = (command) => {
+const validateCommand = (command: string) => {
     return {
         error: true,
         data: {

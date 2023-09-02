@@ -1,15 +1,18 @@
-/**
- * @typedef {{ text?: string; back?: boolean; settings?: boolean; }} HeaderOptions
- * @typedef {{ tabs: string[] }} TabsOptions
- * @typedef {{ text?: string; id: string; selected?: boolean; onClick: () => any; }} TabOptions
- * @typedef {{ elements: string[] }} ElementsOptions
- * @typedef {{
+type HeaderOptions = { text?: string; back?: boolean; settings?: boolean; };
+
+type TabsOptions = { tabs: string[]; };
+
+type TabOptions = { text?: string; id: string; selected?: boolean; onClick: () => any; };
+
+type ElementsOptions = { elements: string[]; };
+
+type ElementOptions = {
     type: "button" | "toggle" | "text" | "tab" | "element" | "dropdown" | "input" | "textbox" | "upload";
     title?: string;
     subtitle?: string;
     text?: string | {
         id?: string;
-        body?: string;   
+        body?: string;
     };
     id?: string;
     onClick?: () => any;
@@ -32,13 +35,13 @@
         min?: number;
         max?: number;
     };
-  }} ElementOptions
- * @typedef {{ title?: string; body?: string; footer?: string }} ModalOptions
- */
+};
+
+type ModalOptions = { title?: string; body?: string; footer?: string; };
 
 const Functions = {
     button: () => window.sound.play( "ui.click" ),
-    toggle: (element) => {
+    toggle: (element: Element) => {
         window.sound.play( "ui.click" );
         let value = element.getAttribute( "value" ) == "true";
         element.setAttribute( "value", !value );
@@ -53,7 +56,7 @@ const Components = {
      * @param { HeaderOptions } options
      * @returns { string }
      */
-    createHeader: (options) => {
+    createHeader: (options: HeaderOptions): string => {
         const header = document.createElement( "div" );
         const header_ = document.createElement( "div" );
         const header__ = document.createElement( "div" );
@@ -149,7 +152,7 @@ const Components = {
      * @param { TabsOptions } options
      * @returns { string }
      */
-    createTabs: (options) => {
+    createTabs: (options: TabsOptions): string => {
         return (
             `<div class="skOQQ">
                 ${options.tabs.join( "" )}
@@ -161,7 +164,7 @@ const Components = {
      * @param { TabOptions } options
      * @returns { string }
      */
-    createTab: (options) => {
+    createTab: (options: TabOptions): string => {
         window.functions.onClick[options?.id] = options?.onClick;
         return (
             `<div
@@ -207,7 +210,7 @@ const Components = {
      * @param { ElementsOptions } options
      * @returns { string }
      */
-    createElements: (options) => {
+    createElements: (options: ElementsOptions): string => {
         return (
             `<div class="elements">
                 ${options.elements.join( "" )}
@@ -219,7 +222,7 @@ const Components = {
      * @param { ElementOptions } options
      * @returns { string }
      */
-    createElement: (options) => {
+    createElement: (options: ElementOptions): string => {
         switch(options?.type) {
             case "element": {
                 return (
@@ -390,7 +393,7 @@ const Components = {
      * @param { ModalOptions } options
      * @returns { string }
      */
-    createModal: (options) => {
+    createModal: (options: ModalOptions): string => {
         return (
             `<div class="popup_">
                 <div class="popup__">

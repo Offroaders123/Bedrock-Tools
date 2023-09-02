@@ -1,10 +1,6 @@
 require( "@electron/remote/main" ).initialize();
-const {
-	app,
-	BrowserWindow,
-	globalShortcut,
-} = require( "electron" );
-const fs = require( "node:fs" );
+import { app, BrowserWindow, globalShortcut } from "electron";
+import fs = require("node:fs");
 
 let debug = false;
 app.on( "window-all-closed", () => app.quit() );

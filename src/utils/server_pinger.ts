@@ -6,19 +6,17 @@
  * @see https://wiki.vg/Raknet_Protocol#Data_types
  */
 
-const dgram = require( "dgram" );
-const ByteBuffer = require( "bytebuffer" );
-const motdParser = require( "@sfirew/mc-motd-parser" );
+import dgram = require("dgram");
+import ByteBuffer = require("bytebuffer");
+import motdParser = require("@sfirew/mc-motd-parser");
 
 const START_TIME = new Date().getTime();
 
 /**
  * Decode Unconnected Ping
- * @param {number} pingId
- * @returns {import('bytebuffer')}
  * @see https://wiki.vg/Raknet_Protocol#Unconnected_Ping
  */
-const UNCONNECTED_PING = (pingId) => {
+const UNCONNECTED_PING = (pingId: number): ByteBuffer => {
     // 0x01
     const bb = new ByteBuffer();
     bb.buffer[0] = 0x01;
@@ -28,10 +26,9 @@ const UNCONNECTED_PING = (pingId) => {
 
 /**
  * Decode Unconnected Pong
- * @param {import('bytebuffer')} buffer
  * @see https://wiki.vg/Raknet_Protocol#Unconnected_Pong
  */
-const UNCONNECTED_PONG = (buffer) => {
+const UNCONNECTED_PONG = (buffer: ByteBuffer) => {
     // 0x1c
     buffer.offset = 1;
     const pingId = buffer.readLong();
@@ -72,7 +69,7 @@ const UNCONNECTED_PONG = (buffer) => {
     };
 };
 
-const ping = (host, port = 19132, cb, timeout = 1000) => {
+const ping = (host: number, port = 19132, cb, timeout = 1000) => {
     const socket = dgram.createSocket( "udp4" );
 
     // Set manual timeout interval.
@@ -92,7 +89,7 @@ const ping = (host, port = 19132, cb, timeout = 1000) => {
     // This protects multiple error callbacks given the complex socket state
     // This is mostly dangerous since it can swallow errors
     let didFireError = false;
-    const handleError = (err) => {
+    const handleError = (err: unknown) => {
         if (!didFireError) {
             didFireError = true;
             cb(null, { ip: "127.0.0.1", hostname: host, port, online: false });
@@ -159,12 +156,12 @@ const ping = (host, port = 19132, cb, timeout = 1000) => {
     socket.on("error", (err) => handleError(err));
 };
 
+type PingOptions = { hostname: string; port?: number; timeout?: number; };
 /**
- * @typedef { { hostname: string; port?: number; timeout?: number } } PingOptions
  * @param { PingOptions } options 
  * @returns 
  */
-const pingBedrock = (options = {}) => {
+const pingBedrock = (options: PingOptions = {}) => {
 	const { hostname, port = 19132, timeout = 8500 } = options;
     if (!hostname) throw new Error( "Host argument is not provided" );
     return new Promise(

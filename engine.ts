@@ -1,21 +1,14 @@
-const electron = require( "@electron/remote" );
-const fs = require( "node:fs" );
+import electron = require("@electron/remote");
+import fs = require("node:fs");
 
-/**
- * @typedef { { name: string; route: string; component(): string; rpc?: string; extra?(): void; } } Route
-*/
+export type Route = { name: string; route: string; component(): string; rpc?: string; extra?(): void; };
 
 const Router = {
     isTransitioning: false,
-    /** @type { Route[] } */
-    routes: [],
+    routes: [] as Route[],
     history: {
-        /** @type { string[] } */
-        list: [],
-        /**
-         * @param { string } path
-        */
-        async go(path) {
+        list: [] as string[],
+        async go(path: string) {
             window.logger.debug( "[ROUTER] Replacing path to", path );
 
             this.list.push( path );
@@ -57,7 +50,7 @@ const Sound = {
     },
 };
 
-const Logger = {
+const Logger: Pick<typeof console,"info" | "debug" | "error"> = {
     info: (...data) => console.log(
 		"\x1B[0m" + new Date().toLocaleTimeString() + " \x1B[33m\x1B[1m[INFO] \x1B[0m-", ...data,
 	),
@@ -96,25 +89,22 @@ const sendToast = async(options) => {
         </div>`
     );
     
-    await new Promise((res) => setTimeout(() => res(), options.timeout * 1000));
+    await new Promise<void>((res) => setTimeout(() => res(), options.timeout * 1000));
     const toastOptions = toastQueue[0];
     if (toastOptions.id == options.id) {
         toast.className = "toast toastLeaving";
         Sound.play( "ui.toast_out" );
-        await new Promise((res) => setTimeout(() => res(), 0.5 * 1000));
+        await new Promise<void>((res) => setTimeout(() => res(), 0.5 * 1000));
     };
 
     delete window.functions.onClick[options.id];
 };
 
 const Engine = {
-    /**
-     * @param { Route } route
-    */
-    loadUI: async (route, isBack = false) => {
+    loadUI: async (route: Route, isBack = false) => {
         const app = document.getElementById( "app" );
         app.className = isBack ? "uiLeavingBack" : "uiLeaving";
-        await new Promise((res) => setTimeout(() => res(), 0.2 * 1000)); //wait for 400 milliseconds
+        await new Promise<void>((res) => setTimeout(() => res(), 0.2 * 1000)); //wait for 400 milliseconds
         app.className = isBack ? "uiEnteringBack" : "uiEntering";
         app.innerHTML = route.component();
         if (route?.extra) route.extra();
@@ -131,10 +121,10 @@ const Engine = {
         if (maximizeApp) maximizeApp.addEventListener( "click", () => currentWindow.isMaximized() ? currentWindow.unmaximize() : currentWindow.maximize());
         if (minimizeApp) minimizeApp.addEventListener( "click", () => currentWindow.minimize());
 
-        await new Promise((res) => setTimeout(() => res(), 0.25 * 1000));
+        await new Promise<void>((res) => setTimeout(() => res(), 0.25 * 1000));
         Router.isTransitioning = false;
     },
-    loadModal: (component) => document.getElementById( "popup" ).innerHTML = component,
+    loadModal: (component: string) => document.getElementById( "popup" ).innerHTML = component,
     sendToast: ({ title = "", body = "", icon = null, timeout = 4, instant = false, onClick = () => {} }) => {
         const id = Date.now();
         if (instant) toastQueue = [{ id, title, body, icon, timeout, onClick }, ...toastQueue];
@@ -181,9 +171,20 @@ const Functions = {
     onChange: {},
 };
 
-globalThis.router = Router;
-globalThis.sound = Sound;
-globalThis.logger = Logger;
-globalThis.engine = Engine;
-globalThis.settings = Settings;
-globalThis.functions = Functions;
+declare global {
+    interface Window {
+        router: typeof Router,
+        sound: typeof Sound,
+        logger: typeof Logger,
+        engine: typeof Engine,
+        settings: typeof Settings,
+        functions: typeof Functions
+    }
+}
+
+window.router = Router;
+window.sound = Sound;
+window.logger = Logger;
+window.engine = Engine;
+window.settings = Settings;
+window.functions = Functions;

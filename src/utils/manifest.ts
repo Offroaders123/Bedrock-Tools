@@ -1,4 +1,4 @@
-const crypto = require( "node:crypto" );
+import crypto = require("node:crypto");
 const scriptingModules = {
 	server: [
 		{
@@ -90,13 +90,13 @@ class Manifest {
 	 * @returns
 	 */
 	constructor(
-		name,
-		description,
-		type,
-		scriptApi = false,
-		betaScripting = false,
-		modules = [],
-		capabilities = [],
+		name: string,
+		description: string,
+		type: number,
+		scriptApi: boolean = false,
+		betaScripting: boolean = false,
+		modules: string[] = [],
+		capabilities: string[] = [],
 	) {
 		const appPackage = JSON.parse(fs.readFileSync( __dirname + "/app.json" ));
 		const dependencies = [];

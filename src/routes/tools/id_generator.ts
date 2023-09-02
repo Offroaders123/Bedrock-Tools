@@ -53,11 +53,11 @@ const idTabs = (selected = 0) => {
                                     style: "hero",
                                     onClick: () => {
                                         window.sound.play("ui.release");
-                                        const amount = Number(document.getElementById( "amount" ).value.trim());
+                                        const amount = Number(document.getElementById( "amount" )!.value.trim());
                                         if (amount > 0) {
                                             const uuids = [];
                                             for (let i = 1; i <= amount && i <= 32; i++) uuids.push(crypto.randomUUID());
-                                            document.getElementById( "output" ).innerText = uuids.join( "\n" );
+                                            document.getElementById( "output" )!.innerText = uuids.join( "\n" );
 
                                             window.engine.sendToast(
                                                 {
@@ -187,7 +187,7 @@ const idTabs = (selected = 0) => {
                                             
                                             if(ids.length > 0)
                                             {
-                                                document.getElementById( "output" ).innerText = ids.join( "\n" );
+                                                document.getElementById( "output" )!.innerText = ids.join( "\n" );
                                                 window.engine.sendToast(
                                                     {
                                                         title: "ID's Generated!",
@@ -243,7 +243,7 @@ const idTabs = (selected = 0) => {
         && Number(tabsElement.getAttribute( "value" )) == selected
     ) return;
 
-    document.getElementById( "tabsContent" ).innerHTML = tabs.find((t, index) => index == selected).component();
+    document.getElementById( "tabsContent" )!.innerHTML = tabs.find((t, index) => index == selected).component();
     tabsElement.setAttribute( "value", selected )
     tabsElement.innerHTML = (
         Components.createTabs(
